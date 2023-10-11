@@ -6,31 +6,32 @@ public class pistas {
 
     public pistas(){};
 
+
     @Override
     public String toString() {
-        return
-                "ID:" + id +
-                "|| Condicion: " + condicion +
-                "|| Precio por hora: " + precioHora;
+        String active = "";
+        if(activo==1){
+            active = "Si";
+        }else{
+            active = "No";
+        }
+        return  "ID: " + id +
+                " ,Precio: " + precioHora +
+                " ,Activo: " + active+"    ";
     }
 
-    public pistas(int id, String condicion, float precioHora, int activo){
+    public pistas(int id, float precioHora, int activo){
         this.id = id;
-        this.condicion = condicion;
         this.precioHora = precioHora;
         this.activo = activo;
     };
     private int id;
-    private String condicion;
     private float precioHora;
     private int activo;
 
     public int getId() {return id;}
     public void setId(int id) {this.id = id;}
 
-    public String getCondicion() {return condicion;}
-
-    public void setCondicion(String condicion){this.condicion = condicion;}
 
     public float getPrecioHora() {return precioHora;}
 

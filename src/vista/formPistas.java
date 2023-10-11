@@ -35,7 +35,6 @@ public class formPistas {
     private JLabel idLbl;
     private JLabel precioLbl;
     private JButton backBtn;
-    private JLabel espacioLbl;
     private JLabel idTxt;
     private JTextField buscadorTxt;
     private JButton buscadorBtn;
@@ -56,7 +55,7 @@ public class formPistas {
                     condicionTxt.setText("");
                     precioTxt.setText("");
                     activoCheckBox.setSelected(false);
-                    listadoPistas = new JList<>(cargarIds());
+                    c.openPistas();
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -74,11 +73,9 @@ public class formPistas {
             public void actionPerformed(ActionEvent e) {
                 try {
                     Integer id = c.selectPista(buscadorTxt.getText()).getId();
-                    String condicion = c.selectPista(buscadorTxt.getText()).getCondicion();
                     Float precio = c.selectPista(buscadorTxt.getText()).getPrecioHora();
                     Integer activo = c.selectPista(buscadorTxt.getText()).getActivo();
                     idTxt.setText(id.toString());
-                    condicionTxt.setText(condicion);
                     precioTxt.setText(precio.toString());
                     if (activo==1){
                         activoCheckBox.setSelected(true);
@@ -101,7 +98,7 @@ public class formPistas {
                 Boolean activo = activoCheckBox.isSelected();
                 try {
                     c.updatePista(id,condicion,precio,activo);
-                    listadoPistas = new JList<>(cargarIds());
+                    c.openPistas();
                 } catch (SQLException ex) {
 
                     throw new RuntimeException(ex);
