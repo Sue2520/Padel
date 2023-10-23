@@ -27,7 +27,6 @@ public class formPistas {
 
     public JPanel panel1;
     private JCheckBox activoCheckBox;
-    private JTextField condicionTxt;
     private JTextField precioTxt;
     private JButton addBtn;
     private JButton selectBtn;
@@ -51,10 +50,7 @@ public class formPistas {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    c.addPista(condicionTxt.getText(),precioTxt.getText(),activoCheckBox.isSelected());
-                    condicionTxt.setText("");
-                    precioTxt.setText("");
-                    activoCheckBox.setSelected(false);
+                    c.addPista(precioTxt.getText(),activoCheckBox.isSelected());
                     c.openPistas();
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
@@ -93,11 +89,10 @@ public class formPistas {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String id = idTxt.getText();
-                String condicion = condicionTxt.getText();
                 String precio = precioTxt.getText();
                 Boolean activo = activoCheckBox.isSelected();
                 try {
-                    c.updatePista(id,condicion,precio,activo);
+                    c.updatePista(id,precio,activo);
                     c.openPistas();
                 } catch (SQLException ex) {
 

@@ -2,6 +2,8 @@ package Controllers;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Objects;
+
 import vista.*;
 import Models.*;
 
@@ -11,22 +13,27 @@ public class controlador {
     public static placeHolder view = new placeHolder();
 
     public static void main(String[] args){
-        inicioAdmin startAdmin = new inicioAdmin();
-        view.setContentPane(startAdmin.panel1);
+        index vista = new index();
+        view.setContentPane(vista.panel1);
         view.setSize(500,500);
         view.setVisible(true);
     }
 
-    public void addPista(String condicion, String precio, Boolean activo) throws SQLException {
+    public void addPista(String precio, Boolean activo) throws SQLException {
 
         Float cost = Float.parseFloat(precio);
+        Integer flag = 0;
 
-        String query = "INSERT INTO `pistas`(`Condicion`, `Precio_por_hora`, `activa`) " +
-                "VALUES ('"+condicion+"',"+cost+","+activo+")";
+        if(activo){
+            flag = 1;
+        }
+
+        String query = "INSERT INTO `pistas`(`Precio_por_hora`, `activa`) " +
+                "VALUES ('"+cost+"',"+flag+")";
         f.update(query);
     }
 
-    public void updatePista(String id, String condicion, String precio, Boolean activo) throws SQLException {
+    public void updatePista(String id, String precio, Boolean activo) throws SQLException {
         String active = "";
         if(activo==true){
             active = "1";
@@ -72,8 +79,8 @@ public class controlador {
         }else{
             active = "0";
         }
-        String query = "UPDATE `usuarios` SET `Email`='"+mail+"',`Nombre`='"+nombre+"',`Apellidos`='"+apellido+"',`passwd`='"+passwd+"',"
-                + "`active`='"+active+"' " + "WHERE dni LIKE '"+dni+"';";
+        String query = "UPDATE `usuarios` SET `Email`='"+mail+"',`Nombre`='"+nombre+"',`Apellidos`='"+apellido+"',`password`='"+passwd+"',"
+                + "`active`='"+active+"' " + "WHERE id LIKE '"+dni+"';";
         f.update(query);
     }
 
@@ -89,7 +96,6 @@ public class controlador {
         usuarios placeholder = new usuarios(dni,mail,nombre,apellidos,passwd);
         return placeholder;
     }
-
     public void checkAdmin(String id, String passwd) throws SQLException {
         Boolean correcta = false;
         String query = "SELECT password FROM administradores WHERE id LIKE '" + id + "';";
@@ -103,6 +109,27 @@ public class controlador {
         if (correcta){ openMainAdmin(); }
     }
 
+    public void checkUser(String id, String passwd) throws SQLException {
+        String query = "SELECT * FROM usuarios WHERE id LIKE '" + id + "';";
+        ResultSet resultado = f.ejecutarQuery(query);
+        resultado.next();
+        String pass = resultado.getString(5);
+        usuarios user = new usuarios(resultado.getString(1),resultado.getString(2),resultado.getString(3),resultado.getString(4),resultado.getString(5));
+        if (passwd.equals(pass)) {
+            openMainUser(user);
+        }else{
+            openInicioUsers(true);
+        }
+    }
+
+    public void openMainUser(usuarios user){
+        mainUsuarios main = new mainUsuarios();
+        view.setContentPane(main.panel1);
+        view.setSize(500,500);
+        mainUsuarios.user = user;
+        view.setVisible(true);
+    }
+
     public void openMainAdmin(){
         mainAdmin main = new mainAdmin();
         view.setContentPane(main.panel1);
@@ -110,17 +137,53 @@ public class controlador {
         view.setVisible(true);
     }
 
-    public void openPistas() throws SQLException{
-        formPistas form = new formPistas();
-        view.setContentPane(form.panel1);
-        view.setSize(750,550);
+    public void fillInfoUser(usuarios u, perfilUser perfil){
+        perfil.nameTxt.setText(u.getNombre()+" "+u.getApellidos());
+        perfil.dniTxt.setText(u.getDni());
+        perfil.mailTxt.setText(u.getMail());
+        perfil.passwdTxt.putClientProperty("passwd",u.getPasswd());
+        perfil.passwdTxt.setText("####");
+        System.out.println(u.getPasswd());
+        System.out.println(u.getDni());
+    }
+
+
+
+    public void openPerfil(usuarios user){
+        perfilUser perfil = new perfilUser();
+        view.setContentPane(perfil.panel1);
+        view.setSize(500,500);
+        fillInfoUser(user, perfil);
+        perfil.hideTxts();
         view.setVisible(true);
     }
 
-    public void openUsers() throws SQLException{
+    public void openPistas() throws SQLException{
+        formPistas form = new formPistas();
+        view.setContentPane(form.panel1);
+        view.setSize(750,500);
+        view.setVisible(true);
+    }
+
+    public void openListUsers() throws SQLException{
         usersForm form = new usersForm();
         view.setContentPane(form.panel1);
         view.setSize(800,500);
+        view.setVisible(true);
+    }
+
+    public void openInicioUsers(Boolean error){
+        inicioUsers form = new inicioUsers();
+        view.setContentPane(form.panel1);
+        view.setSize(500,500);
+        form.errorLbl.setVisible(error);
+        view.setVisible(true);
+    }
+
+    public void openInicioAdmin(){
+        inicioAdmin form = new inicioAdmin();
+        view.setContentPane(form.panel1);
+        view.setSize(500,500);
         view.setVisible(true);
     }
 
@@ -136,7 +199,7 @@ public class controlador {
 
 
     public ArrayList listUser() throws SQLException {
-        ResultSet dniResult = f.ejecutarQuery("SELECT dni FROM usuarios");
+        ResultSet dniResult = f.ejecutarQuery("SELECT id FROM usuarios");
         ArrayList<String> dni = new ArrayList<>();
         while(dniResult.next()){
             usuarios u = new usuarios(dniResult.getString(1));

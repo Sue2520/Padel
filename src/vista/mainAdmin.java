@@ -29,7 +29,7 @@ public class mainAdmin {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    c.openUsers();
+                    c.openListUsers();
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }

@@ -19,6 +19,15 @@ public class usuarios {
         this.passwd = passwd;
     }
 
+    public usuarios(String dni, String mail, String nombre, String apellidos) {
+        this.dni = dni;
+        this.mail = mail;
+        this.nombre = nombre;
+        this.apellidos = apellidos;
+    }
+
+    public usuarios(){}
+
     @Override
     public String toString() {
         return "dni: " + dni;

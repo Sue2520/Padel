@@ -39,7 +39,7 @@ public class usersForm {
                 try {
                     c.addUser(dniTxt.getText(),mailTxt.getText(),nameTxt.getText(),surnameTxt.getText(),
                             passwdTxt.getText(),checkActive.isSelected() );
-                    c.openUsers();
+                    c.openListUsers();
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -71,7 +71,7 @@ public class usersForm {
                     nameTxt.setText(c.selectUsuarios(buscadorTxt.getText()).getNombre());
                     surnameTxt.setText(c.selectUsuarios(buscadorTxt.getText()).getApellidos());
                     passwdTxt.setText(c.selectUsuarios(buscadorTxt.getText()).getPasswd());
-                    c.openUsers();
+                    c.openListUsers();
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
